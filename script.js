@@ -1,4 +1,4 @@
-// Firebase 配置 - 已使用你的 pkpd-database 配置
+// Firebase 配置
 const firebaseConfig = {
     apiKey: "AIzaSyBQuGUV1A7esCJRkPhcAP6i2UStvdJw-Zg",
     authDomain: "pkpd-database.firebaseapp.com",
@@ -21,7 +21,15 @@ let scores = [];
 
 // 初始化圖表
 function initChart() {
-    const ctx = document.getElementById('scoreChart').getContext('2d');
+    const canvas = document.getElementById('scoreChart');
+    if (!canvas) return; // 防止 HTML 未載入時噴錯
+    const ctx = canvas.getContext('2d');
+    
+    // 如果圖表已存在則先銷毀，避免重疊
+    if (scoreChart) {
+        scoreChart.destroy();
+    }
+
     scoreChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -53,6 +61,8 @@ async function loadDevices() {
     database.ref('devices').on('value', (snapshot) => {
         const devicesData = snapshot.val();
         const deviceList = document.getElementById('deviceList');
+        if (!deviceList) return;
+        
         deviceList.innerHTML = '';
         
         if (!devicesData) {
@@ -68,6 +78,7 @@ async function loadDevices() {
             deviceList.appendChild(chip);
         });
 
+        // 預設選擇第一個設備
         if (!currentDevice && Object.keys(devicesData).length > 0) {
             selectDevice(Object.keys(devicesData)[0]);
         }
@@ -80,21 +91,29 @@ function selectDevice(deviceId) {
         database.ref(`devices/${currentDevice}/statistics`).off();
     }
     currentDevice = deviceId;
+    
+    // 更新 UI 狀態
+    const chips = document.querySelectorAll('.device-chip');
+    chips.forEach(c => c.classList.remove('active'));
+    
     initChart();
     listenForUpdates(deviceId);
 }
 
 function listenForUpdates(deviceId) {
-    document.getElementById('connectionStatus').textContent = '在線';
-    document.getElementById('connectionStatus').className = 'status-online';
+    const statusEl = document.getElementById('connectionStatus');
+    if (statusEl) {
+        statusEl.textContent = '在線';
+        statusEl.className = 'status-online';
+    }
 
     // 統計監聽
     database.ref(`devices/${deviceId}/statistics`).on('value', (snapshot) => {
         const stats = snapshot.val();
         if (stats) {
-            document.getElementById('totalGames').textContent = stats.totalGames || 0;
-            document.getElementById('averageScore').textContent = stats.averageScore?.toFixed(1) || 0;
-            document.getElementById('highScore').textContent = stats.highScore || 0;
+            if (document.getElementById('totalGames')) document.getElementById('totalGames').textContent = stats.totalGames || 0;
+            if (document.getElementById('averageScore')) document.getElementById('averageScore').textContent = stats.averageScore?.toFixed(1) || 0;
+            if (document.getElementById('highScore')) document.getElementById('highScore').textContent = stats.highScore || 0;
         }
     });
 
@@ -110,34 +129,37 @@ function listenForUpdates(deviceId) {
 
 function updateUI() {
     const tbody = document.getElementById('recordsBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
     
     scores.forEach(record => {
         const row = tbody.insertRow();
+        // 修正時間格式化 (如果是秒則 * 1000)
+        const dateStr = record.timestamp ? new Date(record.timestamp * 1000).toLocaleString() : 'N/A';
         row.innerHTML = `
-            <td>${new Date(record.timestamp * 1000).toLocaleString()}</td>
-            <td><span class="score-badge">${record.score}</span></td>
+            <td>${dateStr}</td>
+            <td><span class="score-badge">${record.score || 0}</span></td>
             <td>${record.sequenceLength || 'N/A'}</td>
-            <td>${record.duration}s</td>
-            <td>${record.deviceID?.substring(0,8)}...</td>
+            <td>${record.duration || 0}s</td>
+            <td>${record.deviceID ? record.deviceID.substring(0,8) : 'N/A'}...</td>
         `;
     });
 
-    if (scores.length > 0) {
+    if (scores.length > 0 && scoreChart) {
         const latest = scores[0];
-        document.getElementById('latestScore').textContent = latest.score;
-        document.getElementById('latestTime').textContent = new Date(latest.timestamp * 1000).toLocaleTimeString();
+        if (document.getElementById('latestScore')) document.getElementById('latestScore').textContent = latest.score;
+        if (document.getElementById('latestTime')) document.getElementById('latestTime').textContent = new Date(latest.timestamp * 1000).toLocaleTimeString();
         
         const chartData = [...scores].reverse();
         scoreChart.data.labels = chartData.map((_, i) => `T-${chartData.length - i}`);
         scoreChart.data.datasets[0].data = chartData.map(s => s.score);
         scoreChart.update();
     }
-    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+    if (document.getElementById('lastUpdate')) document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
 }
 
-// 啟動
-window.onload = () => {
+// 啟動程式
+document.addEventListener('DOMContentLoaded', () => {
     initChart();
     loadDevices();
-};
+});
