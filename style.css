@@ -1,4 +1,4 @@
-/* 全局設定：重置與字體 */
+/* 全局設定 */
 * {
     margin: 0;
     padding: 0;
@@ -6,206 +6,151 @@
 }
 
 body {
-    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; /* 使用更乾淨的無襯線字體 */
-    background-color: #f0f2f5; /* 醫療背景常的淺灰白色 */
-    color: #333; /* 深灰色文字，比純黑更舒適 */
-    min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f9; /* 淺灰藍背景 */
+    color: #333;
     padding: 20px;
+    line-height: 1.6;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* 標題區域：乾淨、專業 */
+/* 標題區域 */
 header {
     text-align: center;
     margin-bottom: 30px;
-    padding: 25px;
-    background: #fff; /* 純白背景 */
-    border-bottom: 3px solid #0277bd; /* 底部增加一條醫療藍的強調線 */
-    /* 移除圓角 border-radius */
+    padding: 30px;
+    background: #fff;
+    border: 2px solid #0277bd; /* 藍色外框 */
+    border-radius: 0; /* 確保直角 */
 }
 
 h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    color: #2c3e50; /* 深藍灰色標題 */
+    color: #01579b;
+    font-size: 2.2em;
+    margin-bottom: 5px;
     font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-.subtitle {
-    font-size: 1.1em;
-    color: #546e7a; /* 次要文字顏色 */
-    font-weight: 500;
 }
 
 /* 儀表板佈局 */
 .dashboard {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
     margin-bottom: 30px;
 }
 
-/* 卡片設計：方角、白底、細邊框 */
+/* 所有格子的核心樣式：藍色外框 + 直角 */
 .card {
-    background: #fff; /* 純白背景 */
+    background: #fff;
     padding: 25px;
-    border: 1px solid #e1e8ed; /* 增加細緻的淺灰邊框 */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 非常輕微的陰影，增加層次感 */
-    border-radius: 0; /* 【關鍵修改】強制直角 */
-    /* 移除原本的 hover 上浮效果，保持穩定感 */
+    border: 2px solid #0277bd; /* 統一藍色邊框 */
+    border-radius: 0; /* 強制直角 */
+    box-shadow: none; /* 移除陰影，強化格子感 */
 }
 
 .card h2 {
-    font-size: 1.4em;
+    font-size: 1.2em;
+    color: #0277bd;
     margin-bottom: 20px;
-    color: #0277bd; /* 使用醫療藍作為卡片標題色 */
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e1f5fe; /* 標題下方的淺藍細線 */
     display: flex;
     align-items: center;
     gap: 10px;
-    font-weight: 600;
-    border-bottom: 1px solid #eee; /* 標題下方增加分隔線 */
-    padding-bottom: 10px;
-}
-
-.card h2 i {
-    color: #0288d1; /* 圖標顏色稍淺 */
 }
 
 /* 統計數字 */
 .stat-number {
-    font-size: 3em;
-    font-weight: 700;
-    color: #0277bd; /* 將原本的金色改為專業的醫療藍 */
-    margin: 15px 0 5px 0;
-    line-height: 1;
+    font-size: 3.5em;
+    font-weight: 800;
+    color: #0277bd;
+    margin: 10px 0;
 }
 
 .stat-label {
-    font-size: 0.9em;
-    color: #78909c;
-    text-transform: uppercase; /* 標籤大寫，更顯專業 */
+    font-size: 0.85em;
+    color: #546e7a;
     letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* 表格樣式：格格分明 */
+table {
+    width: 100%;
+    border-collapse: collapse; /* 讓邊框合併，格線更清晰 */
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #0277bd; /* 表格格線設為藍色 */
+    color: #455a64;
+}
+
+th {
+    background-color: #e1f5fe; /* 表頭淺藍背景 */
+    color: #01579b;
+    font-weight: 700;
+}
+
+/* 分數標籤 */
+.score-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #fff;
+    color: #0277bd;
+    border: 1px solid #0277bd; /* 標籤藍色邊框 */
+    border-radius: 0; /* 直角 */
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* 設備列表選擇器 */
+.device-list {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.device-chip {
+    padding: 12px 20px;
+    background: #fff;
+    border: 1px solid #0277bd; /* 預設藍色邊框 */
+    color: #0277bd;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 0; /* 直角 */
+    transition: all 0.2s;
+}
+
+.device-chip:hover {
+    background: #e1f5fe;
+}
+
+.device-chip.active {
+    background: #0277bd; /* 選中時填滿藍色 */
+    color: #fff;
+    border-color: #01579b;
+}
+
+/* 連線狀態 */
+.status-online { color: #2e7d32; font-weight: bold; }
+.status-offline { color: #d32f2f; font-weight: bold; }
+
+/* 頁尾 */
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #90a4ae;
+    border-top: 2px solid #0277bd; /* 頁尾上方也要藍線 */
+    margin-top: 50px;
+    font-size: 0.9em;
 }
 
 /* 圖表容器 */
 .chart-container {
     height: 300px;
-    margin-top: 20px;
-}
-
-/* 表格設計：清晰、臨床感 */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    font-size: 0.95em;
-}
-
-th, td {
-    padding: 15px;
-    text-align: left;
-    border: 1px solid #e1e8ed; /* 增加方格子邊框 */
-    color: #455a64;
-}
-
-th {
-    background: #f8f9fa; /* 表頭淺灰色背景 */
-    color: #2c3e50;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.85em;
-}
-
-tr:hover {
-    background: #f1f8ff; /* 滑鼠經過時顯示非常淡的藍色 */
-}
-
-/* 分數標籤：方角、藍色系 */
-.score-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    background: #e3f2fd; /* 淺藍色背景 */
-    color: #0277bd; /* 深藍色文字 */
-    font-weight: bold;
-    border-radius: 0; /* 【關鍵修改】強制直角 */
-    border: 1px solid #bbdefb; /* 增加邊框 */
-    font-family: monospace; /* 使用等寬字體顯示數字，更像數據 */
-}
-
-/* 狀態顏色：保持清晰 */
-.status-online { color: #2e7d32; font-weight: bold; } /* 較深的綠色 */
-.status-offline { color: #c62828; font-weight: bold; } /* 較深的紅色 */
-
-/* 設備列表晶片 */
-.device-list {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.device-chip {
-    background: #f5f5f5; /* 淺灰背景 */
-    padding: 10px 18px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid #dce4ec; /* 淺灰邊框 */
-    color: #546e7a;
-    font-weight: 500;
-    border-radius: 0; /* 【關鍵修改】強制直角 */
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.device-chip:hover {
-    background: #e3f2fd;
-    border-color: #bbdefb;
-    color: #0277bd;
-}
-
-.device-chip.active {
-    background: #0277bd; /* 選中時為深醫療藍 */
-    color: #fff;
-    border-color: #01579b;
-}
-
-/* 載入與動畫 */
-.loading {
-    text-align: center;
-    padding: 40px;
-    color: #90a4ae;
-    font-style: italic;
-}
-
-.pulse { animation: pulse 1.5s infinite; }
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-/* 頁尾 */
-footer {
-    text-align: center;
-    margin-top: 40px;
-    padding: 20px;
-    color: #78909c;
-    font-size: 0.9em;
-    border-top: 1px solid #e1e8ed;
-}
-
-@media (max-width: 768px) {
-    .dashboard {
-        grid-template-columns: 1fr;
-    }
-    h1 {
-        font-size: 2em;
-    }
+    border: 1px solid #e1f5fe; /* 圖表周圍稍微淡一點的邊框 */
+    padding: 10px;
 }
