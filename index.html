@@ -3,16 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Bloom - 數據 監控</title>
-    
-    <!-- 引入 Firebase SDK -->
+    <title>Memory Bloom - 數據監控</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    
-    <!-- 引入 Chart.js 圖表庫 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- 引入自定義樣式 -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,53 +16,57 @@
             <p class="subtitle">遊戲數據實時監控</p>
         </header>
 
-        <!-- 設備選擇區 -->
+        <!-- 設備選擇區 & 控制面板 -->
         <div class="card" style="margin-bottom: 30px;">
             <h2>📱 選擇設備 (點擊查看詳情)</h2>
-            <div class="device-list" id="deviceList">
-                <div class="loading">正在搜尋 Firebase 中的設備...</div>
+            
+            <div class="device-toolbar">
+                <div class="device-list" id="deviceList">
+                    <div class="loading">正在搜尋 Firebase 中的設備...</div>
+                </div>
+
+                <!-- 遠程控制面板 -->
+                <div class="control-panel" id="remoteControls" style="display: none;">
+                    <div class="status-indicator">
+                        當前模式: <span id="currentDiff" class="diff-badge">讀取中...</span>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-ctrl btn-easy" onclick="setDifficulty(0)">Easy</button>
+                        <button class="btn-ctrl btn-hard" onclick="setDifficulty(1)">Hard</button>
+                        <button class="btn-ctrl btn-auto" onclick="setDifficulty(2)">Auto</button>
+                    </div>
+                    <span id="cmdStatus" class="cmd-feedback"></span>
+                </div>
             </div>
         </div>
 
         <div class="dashboard">
-            <!-- 統計卡片 -->
             <div class="card">
                 <h2>📊 累計數據</h2>
                 <div class="stat-number" id="totalGames">0</div>
                 <div class="stat-label">總遊玩次數</div>
-                
                 <div class="stat-number" id="highScore" style="font-size: 2.5em;">0</div>
                 <div class="stat-label">歷史最高分</div>
-
-                <div class="stat-number" id="totalScore" style="font-size: 2.5em;">0</div>
-                <div class="stat-label">總累積分數</div>
             </div>
 
-            <!-- 圖表卡片 -->
             <div class="card">
-                <h2>📈 近期表現 (最近10場)</h2>
+                <h2>📈 近期表現</h2>
                 <div class="chart-container">
                     <canvas id="scoreChart"></canvas>
                 </div>
             </div>
 
-            <!-- 最新狀態卡片 -->
             <div class="card">
                 <h2>🎯 最新一局</h2>
                 <div class="stat-number" id="latestScore">0</div>
                 <div class="stat-label">分數</div>
-                
                 <div style="font-size: 1.2em; color: #333; margin-top: 10px;" id="latestMode">--</div>
                 <div class="stat-label">模式</div>
-
                 <div style="margin-top: 20px;" id="latestTime">--:--:--</div>
-                <div class="stat-label">時間</div>
-                
                 <div style="margin-top: 10px;">狀態: <span id="connectionStatus" class="status-offline">等待數據...</span></div>
             </div>
         </div>
 
-        <!-- 記錄表格 -->
         <div class="card">
             <h2>📋 詳細記錄清單</h2>
             <div id="recordsTable" style="overflow-x: auto;">
@@ -83,9 +81,7 @@
                         </tr>
                     </thead>
                     <tbody id="recordsBody">
-                        <tr>
-                            <td colspan="5" class="loading">請先選擇一個設備...</td>
-                        </tr>
+                        <tr><td colspan="5" class="loading">請先選擇一個設備...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -97,8 +93,6 @@
         <p>最後更新: <span id="lastUpdate">--:--:--</span></p>
     </footer>
 
-    <!-- 引入自定義腳本 -->
     <script src="script.js"></script>
 </body>
-
 </html>
