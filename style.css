@@ -1,96 +1,388 @@
-/* 全局設定 */
+/* --- 基礎設定 --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f4f7f9;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f4f7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     color: #333;
     padding: 20px;
-    line-height: 1.6;
 }
 
-.container { max-width: 1200px; margin: 0 auto; }
-
-header {
-    text-align: center; margin-bottom: 30px; padding: 30px;
-    background: #fff; border: 2px solid #0277bd; border-radius: 0;
+/* 新增：懸浮語言切換按鈕 */
+.btn-lang {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #01579b;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 100;
+    transition: background 0.2s;
 }
-h1 { color: #01579b; font-size: 2.2em; margin-bottom: 5px; font-weight: 700; }
-.subtitle { color: #546e7a; font-size: 1.1em; }
+.btn-lang:hover { background: #0277bd; }
 
-.dashboard {
+.container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    flex: 1;
+}
+
+/* --- 第一行佈局 --- */
+.top-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr 1.5fr;
     gap: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .card {
-    background: #fff; padding: 25px;
-    border: 2px solid #0277bd; border-radius: 0;
-}
-.card h2 {
-    font-size: 1.2em; color: #0277bd; margin-bottom: 0;
-    padding-bottom: 10px; border-bottom: 1px solid #e1f5fe;
-    display: flex; align-items: center; gap: 10px;
+    background: #fff;
+    padding: 20px;
+    border: 2px solid #0277bd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* --- 新增佈局樣式 --- */
+.card h2 {
+    font-size: 1.1em;
+    color: #0277bd;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e1f5fe;
+    padding-bottom: 8px;
+}
+
+/* 左側標題格 */
+.title-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.title-card h1 { color: #01579b; font-size: 1.8em; margin-bottom: 8px; }
+.title-card .subtitle { color: #546e7a; font-weight: 600; margin-bottom: 5px; }
+.title-card .version-info { color: #90a4ae; font-size: 0.85em; letter-spacing: 0.5px; }
+
+/* --- 右側留言格 (聊天記錄樣式) --- */
+.note-card { 
+    display: flex; 
+    flex-direction: column; 
+    height: 400px; 
+}
+
+.chat-history-box {
+    flex: 1;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-placeholder {
+    color: #adb5bd;
+    text-align: center;
+    margin-top: 50px;
+    font-style: italic;
+}
+
+.chat-message {
+    background: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid #ccc; 
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+.msg-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.85em;
+}
+
+.msg-role { font-weight: bold; }
+.msg-time { color: #999; }
+.msg-content { color: #333; line-height: 1.5; white-space: pre-wrap; }
+
+/* 角色顏色區分 */
+.role-nurse { border-left-color: #e91e63; } 
+.role-nurse .msg-role { color: #e91e63; }
+
+.role-doctor { border-left-color: #2196f3; } 
+.role-doctor .msg-role { color: #2196f3; }
+
+.role-therapist { border-left-color: #ff9800; } 
+.role-therapist .msg-role { color: #ff9800; }
+
+.role-family { border-left-color: #4caf50; } 
+.role-family .msg-role { color: #4caf50; }
+
+
+/* 輸入區樣式 */
+.chat-input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.role-selector-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.role-select {
+    padding: 4px 10px;
+    border: 1px solid #b0bec5;
+    border-radius: 4px;
+    outline: none;
+    font-weight: bold;
+    color: #01579b;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input-area textarea {
+    flex: 1;
+    height: 40px; 
+    min-height: 40px;
+    padding: 8px;
+    border: 1px solid #b0bec5;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: inherit;
+}
+.chat-input-area textarea:focus { border-color: #0277bd; outline: none; }
+
+#sendMsgBtn {
+    background: #0277bd;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    min-width: 80px;
+}
+#sendMsgBtn:hover { background: #01579b; }
+
+
+/* --- 設備與控制區 --- */
 .device-toolbar {
     display: flex;
-    justify-content: space-between; /* 左右分佈 */
-    align-items: center; /* 垂直居中 */
-    flex-wrap: wrap; /* 小屏幕自動換行 */
-    gap: 15px;
-    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.device-list { 
-    display: flex; gap: 10px; flex-wrap: wrap; 
+.device-list { display: flex; gap: 10px; flex-wrap: wrap; }
+.device-chip { 
+    padding: 8px 12px; 
+    border: 1px solid #cfd8dc; 
+    cursor: pointer; 
+    background: #f5f5f5; 
+    border-radius: 4px; 
+    font-size: 0.9em;
+    transition: all 0.2s;
 }
+.device-chip:hover { border-color: #0277bd; color: #0277bd; }
+.device-chip.active { background: #0277bd; color: #fff; border-color: #01579b; }
+
+.btn-report {
+    background: #fff;
+    color: #e65100;
+    border: 1px solid #e65100;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+.btn-report:hover { background: #fff3e0; }
 
 .control-panel {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
+    background: #e3f2fd;
+    padding: 8px 15px;
+    border-radius: 6px;
+    border: 1px solid #90caf9;
 }
-/* ------------------ */
+.panel-title { font-size: 0.85em; font-weight: bold; color: #0277bd; margin-right: 5px; }
+.status-indicator { font-size: 0.9em; margin-right: 10px; }
+.diff-badge { font-weight: bold; color: #01579b; }
 
-.stat-number { font-size: 3.5em; font-weight: 800; color: #0277bd; margin: 5px 0; }
-.stat-label { font-size: 0.85em; color: #546e7a; font-weight: 600; margin-bottom: 15px; }
-
-.status-online { color: #2e7d32; font-weight: bold; background: #e8f5e9; padding: 2px 8px; border-radius: 4px; }
-.status-offline { color: #d32f2f; font-weight: bold; background: #ffebee; padding: 2px 8px; border-radius: 4px; }
-
-.device-chip {
-    padding: 10px 15px; background: #fff; border: 2px solid #e0e0e0;
-    color: #546e7a; cursor: pointer; font-weight: 600; transition: all 0.2s;
-}
-.device-chip:hover { border-color: #0277bd; color: #0277bd; }
-.device-chip.active { background: #0277bd; color: #fff; border-color: #0277bd; }
-
-/* 醫護按鈕 */
-.btn-medical {
-    background-color: #4CAF50; color: white;
-    border: 2px solid #388E3C; padding: 8px 16px;
-    font-size: 0.95em; font-weight: bold; cursor: pointer;
-    border-radius: 4px; display: flex; align-items: center; gap: 8px;
+.btn-group { display: flex; gap: 5px; }
+.btn-ctrl {
+    border: 1px solid #0277bd;
+    background: #fff;
+    color: #0277bd;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 0.85em;
+    border-radius: 4px;
     transition: all 0.2s;
 }
-.btn-medical:hover { background-color: #43A047; transform: translateY(-2px); }
-.btn-medical:active { transform: translateY(0); }
+.btn-ctrl:hover { background: #0277bd; color: #fff; }
+.cmd-feedback { font-size: 0.8em; color: #2e7d32; font-weight: bold; margin-left: 8px; }
 
-.cmd-feedback { font-size: 0.9em; color: #2e7d32; font-weight: bold; }
+/* --- 儀表板 --- */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+.stat-group { display: flex; justify-content: space-around; text-align: center; }
+.stat-number { font-size: 2.5em; font-weight: 800; color: #0277bd; }
+.stat-label { color: #607d8b; font-size: 0.9em; margin-top: 5px; }
 
-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; color: #455a64; }
-th { background-color: #e1f5fe; color: #01579b; font-weight: 700; border: 1px solid #0277bd; }
-td { border: 1px solid #0277bd; }
+.chart-container { height: 220px; position: relative; }
 
-.score-badge { display: inline-block; padding: 4px 10px; background: #0277bd; color: #fff; border-radius: 12px; font-weight: bold; font-size: 0.9em; }
-.mode-badge { font-size: 0.8em; padding: 2px 6px; border: 1px solid #ccc; color: #666; border-radius: 4px; text-transform: uppercase; }
+.status-online { color: #2e7d32; font-weight: bold; background: #e8f5e9; padding: 3px 8px; border-radius: 4px; font-size: 0.9em; }
+.status-offline { color: #c62828; font-weight: bold; background: #ffebee; padding: 3px 8px; border-radius: 4px; font-size: 0.9em; }
 
-.chart-container { position: relative; height: 250px; width: 100%; }
+.table-responsive { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 0.95em; }
+th, td { padding: 10px 12px; border: 1px solid #e0e0e0; text-align: left; }
+th { background: #e1f5fe; color: #01579b; border-color: #0277bd; }
+td { border-color: #bbdefb; }
 
-footer { text-align: center; padding: 30px; color: #90a4ae; border-top: 2px solid #0277bd; margin-top: 50px; font-size: 0.9em; }
+footer { text-align: center; padding: 20px; color: #90a4ae; border-top: 2px solid #0277bd; margin-top: auto; font-size: 0.85em; }
 .loading { color: #999; font-style: italic; padding: 20px; text-align: center; }
+
+/* --- 報告模態框 --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-header h3 { color: #0277bd; margin: 0; }
+.close-btn { font-size: 1.5em; cursor: pointer; color: #666; }
+
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-download {
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+.btn-cancel {
+    background: #cfd8dc;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.report-body {
+    padding: 40px;
+    overflow-y: auto;
+    font-family: 'Times New Roman', 'KaiTi', serif;
+    background: #fff;
+}
+
+.report-title-section { text-align: center; margin-bottom: 20px; }
+.report-title-section h2 { color: #333; margin-bottom: 5px; }
+.report-title-section p { color: #666; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; }
+
+.report-info { margin-bottom: 30px; line-height: 1.6; color: #444; }
+
+.report-section { margin-bottom: 25px; }
+.report-section h4 { 
+    color: #01579b; 
+    border-left: 4px solid #0277bd; 
+    padding-left: 10px; 
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.analysis-text { line-height: 1.8; text-align: justify; color: #333; }
+.suggestion-list li { margin-bottom: 8px; line-height: 1.6; }
+
+.report-msg-list {
+    list-style: none;
+    padding: 0;
+}
+.report-msg-list li {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #eee;
+    font-size: 0.95em;
+    color: #444;
+}
+
+.report-footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 0.8em;
+    color: #999;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+@media (max-width: 900px) {
+    .top-row { grid-template-columns: 1fr; }
+    .control-panel { width: 100%; justify-content: space-between; margin-top: 10px; }
+    .report-body { padding: 20px; }
+}
